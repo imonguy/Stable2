@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic AI v1201.FIXED</title>
+    <style>
+        :root { --p: #2563eb; --s: #10b981; --d: #0f172a; --b: #f8fafc; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--b); margin: 0; padding: 10px; }
+        .box { max-width: 850px; margin: 10px auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #e2e8f0; }
+        nav { background: var(--d); color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .up-btn { background: var(--p); color: #fff; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; }
+        .main { padding: 25px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .card { border: 1px solid #f1f5f9; padding: 15px; border-radius: 12px; background: #fff; }
+        h3 { margin: 0 0 10px 0; font-size: 15px; color: var(--p); border-bottom: 2px solid #f1f5f9; padding-bottom: 5px; }
+        .item { margin-bottom: 10px; }
+        label { display: block; font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 3px; }
+        input { width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        select { width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; }
+        .btn-run { width: 100%; padding: 15px; background: var(--d); color: #fff; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 15px; font-size: 16px; }
+        #res { margin-top: 20px; display: none; padding: 15px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0; text-align: center; }
+        .log { background: #0f172a; color: #38bdf8; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; text-align: left; margin-top: 15px; white-space: pre-wrap; }
+        #overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; }
+        .p-bar { width: 250px; height: 6px; background: #334155; border-radius: 3px; margin: 15px 0; overflow: hidden; }
+        .p-fill { width: 0%; height: 100%; background: var(--p); }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <nav>
+        <strong>ACADEMIC AI FIXED</strong>
+        <button class="up-btn" onclick="document.getElementById('fin').click()">CẬP NHẬT THẲNG</button>
+        <input type="file" id="fin" hidden accept=".html">
+    </nav>
+
+    <div class="main">
+        <div class="grid">
+            <div class="card">
+                <h3>📊 Tự Nhiên & Xã Hội</h3>
+                <div class="item"><label>Toán</label><input type="number" class="s" step="0.1" value="0"></div>
+                <div class="item"><label>Văn</label><input type="number" class="s" step="0.1" value="0"></div>
+                <div class="item"><label>Anh</label><input type="number" class="s" step="0.1" value="0"></div>
+                <div class="item"><label>Lí</label><input type="number" class="s" step="0.1" value="0"></div>
+                <div class="item"><label>Hóa</label><input type="number" class="s" step="0.1" value="0"></div>
+                <div class="item"><label>Sử (Mới)</label><input type="number" class="s" step="0.1" value="0"></div>
+                <div class="item"><label>Địa</label><input type="number" class="s" step="0.1" value="0"></div>
+                <div class="item"><label>Tin</label><input type="number" class="s" step="0.1" value="0"></div>
+                <div class="item"><label>GDQP</label><input type="number" class="s" step="0.1" value="0"></div>
+            </div>
+            <div class="card">
+                <h3>✅ Đánh giá nhận xét</h3>
+                <div class="item"><label>Thể dục</label><select class="n"><option>Đạt</option><option>Chưa đạt</option></select></div>
+                <div class="item"><label>Trải nghiệm</label><select class="n"><option>Đạt</option><option>Chưa đạt</option></select></div>
+                <div class="item"><label>GD địa phương</label><select class="n"><option>Đạt</option><option>Chưa đạt</option></select></div>
+                <p style="font-size: 11px; color: #64748b;">* Nhập đủ 9 môn để AI phân tích chính xác nhất.</p>
+            </div>
+        </div>
+
+        <button class="btn-run" id="calcBtn">PHÂN TÍCH HỆ THỐNG</button>
+
+        <div id="res">
+            <div style="font-size: 12px; color: #64748b;">GPA TRUNG BÌNH</div>
+            <div id="gpa" style="font-size: 40px; font-weight: 900;">0.0</div>
+            <div id="rank" style="font-weight: bold; margin: 10px 0; padding: 5px 15px; border-radius: 20px; display: inline-block;">---</div>
+            <div class="log" id="l"></div>
+        </div>
+    </div>
+</div>
+
+<div id="overlay">
+    <h3>CORE SYSTEM UPDATING...</h3>
+    <div class="p-bar"><div class="p-fill" id="f"></div></div>
+    <div id="t">0%</div>
+</div>
+
+<script>
+    // FIX TRIỆT ĐỂ NÚT BẤM
+    document.getElementById('calcBtn').addEventListener('click', function() {
+        try {
+            const sInp = document.querySelectorAll('.s');
+            const nInp = document.querySelectorAll('.n');
+            let scores = [];
+            
+            sInp.forEach(i => {
+                let v = parseFloat(i.value);
+                scores.push(isNaN(v) ? 0 : v);
+            });
+
+            let sum = scores.reduce((a, b) => a + b, 0);
+            let gpa = (sum / 9).toFixed(2);
+            let checks = Array.from(nInp).map(s => s.value);
+            
+            // Bộ não Vietschool Core
+            const getLvl = (ss, cc) => {
+                let min = Math.min(...ss);
+                let c8 = ss.filter(x => x >= 8).length;
+                let c65 = ss.filter(x => x >= 6.5).length;
+                let pass = cc.every(v => v === "Đạt");
+                
+                if(pass && min >= 6.5 && c8 >= 6) return { id: 4, txt: "TỐT", c: "#2563eb" };
+                if(pass && min >= 5.0 && c65 >= 6) return { id: 3, txt: "KHÁ", c: "#f59e0b" };
+                return { id: 2, txt: "ĐẠT/CHƯA ĐẠT", c: "#64748b" };
+            };
+
+            let resObj = getLvl(scores, checks);
+
+            // Hiển thị
+            document.getElementById('res').style.display = 'block';
+            document.getElementById('gpa').innerText = gpa;
+            const rb = document.getElementById('rank');
+            rb.innerText = resObj.txt;
+            rb.style.backgroundColor = resObj.c + "20";
+            rb.style.color = resObj.c;
+
+            let log = `> Kết nối Vietschool AI... Thành công!\n`;
+            log += `> GPA: ${gpa} | Mục tiêu 8.1: ${gpa >= 8.1 ? 'ĐẠT ✅' : 'THIẾU ' + (8.1 - gpa).toFixed(2)}\n`;
+            log += `> Môn Lịch sử: Ghi nhận hệ thống.\n`;
+            log += `> Trạng thái: Đã tối ưu hóa thuật toán tính toán.`;
+            document.getElementById('l').innerHTML = log;
+            
+        } catch (e) {
+            alert("Lỗi hệ thống: " + e.message);
+        }
+    });
+
+    // FIX CẬP NHẬT THẲNG
+    document.getElementById('fin').addEventListener('change', function(e) {
+        let file = e.target.files[0];
+        if(!file) return;
+        let rd = new FileReader();
+        rd.onload = function(ev) {
+            document.getElementById('overlay').style.display = 'flex';
+            let p = 0;
+            let timer = setInterval(() => {
+                p += 5;
+                document.getElementById('f').style.width = p + '%';
+                document.getElementById('t').innerText = p + '%';
+                if(p >= 100) {
+                    clearInterval(timer);
+                    document.open();
+                    document.write(ev.target.result);
+                    document.close();
+                }
+            }, 30);
+        };
+        rd.readAsText(file);
+    });
+</script>
+</body>
+</html>
